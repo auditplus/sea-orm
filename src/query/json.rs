@@ -95,6 +95,11 @@ impl FromQueryResult for JsonValue {
                                         try_get_type!(Vec<$type>, col);
                                     }
                                 }
+                                sqlx::postgres::PgTypeKind::Enum(values) => {
+                                    map.insert(col.to_owned(), json!(values));
+                                    continue;
+
+                                }
                                 _ => {
                                     if <$type as Type<Postgres>>::type_info().eq(col_type) {
                                         try_get_type!($type, col);
